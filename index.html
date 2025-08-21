@@ -792,9 +792,11 @@
             iceGatheringComplete = true;
             showLoading(false);
             const offer = localConnection.localDescription;
-            document.getElementById('myOffer').textContent = JSON.stringify(offer);
+            // JSON을 Base64로 인코딩하여 코드를 더 견고하게 만듭니다.
+            const encodedOffer = btoa(JSON.stringify(offer));
+            document.getElementById('myOffer').textContent = encodedOffer;
             document.getElementById('connectionCodes').style.display = 'block';
-            log('연결 코드 생성이 완료되었습니다. 상대방에게 전달해주세요.', 'success');
+            log('암호화된 연결 코드가 생성되었습니다. 상대방에게 전달해주세요.', 'success');
         }
 
         async function initializeConnection() {
@@ -868,7 +870,8 @@
             }
 
             try {
-                const remoteDesc = JSON.parse(remoteCode);
+                // Base64로 인코딩된 코드를 디코딩하고 JSON으로 파싱합니다.
+                const remoteDesc = JSON.parse(atob(remoteCode));
                 showLoading(true);
 
                 if (remoteDesc.type === 'offer' && !isInitiator) {
