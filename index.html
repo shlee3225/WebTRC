@@ -534,13 +534,16 @@
                     <div class="code-section">
                         <h3>내 연결 코드 (상대방에게 전달)</h3>
                         <div class="code-display" id="myOffer"></div>
-                        <button class="copy-btn" onclick="copyToClipboard('myOffer')">복사</button>
+                        <button class="copy-btn" onclick="copyToClipboard('myOffer')">코드 복사</button>
+                        <button class="copy-btn" onclick="downloadCodeFile()" style="background: #007bff; margin-left: 5px;">암호 파일 다운로드</button>
                     </div>
 
                     <div class="code-section">
                         <h3>상대방 연결 코드 입력</h3>
-                        <textarea class="code-input" id="remoteAnswer" placeholder="상대방의 연결 코드를 여기에 붙여넣으세요"></textarea>
-                        <button class="btn btn-secondary" id="connectBtn" onclick="connectToRemote()" style="margin-top: 10px;">연결하기</button>
+                        <textarea class="code-input" id="remoteAnswer" placeholder="상대방의 연결 코드를 여기에 붙여넣거나, 아래 버튼으로 암호 파일을 업로드하세요."></textarea>
+                        <input type="file" id="codeFileInput" accept=".txt,.json" style="display: none;" onchange="loadCodeFromFile(event)">
+                        <button class="btn btn-warning" onclick="document.getElementById('codeFileInput').click()" style="margin-top: 10px;">암호 파일 업로드</button>
+                        <button class="btn btn-secondary" id="connectBtn" onclick="connectToRemote()" style="margin-top: 10px; margin-left: 10px;">연결하기</button>
                     </div>
                 </div>
 
@@ -688,6 +691,42 @@
                 alert('복사에 실패했습니다.');
                 log(`클립보드 복사 실패: ${err}`, 'error');
             });
+        }
+
+        function downloadCodeFile() {
+            const code = document.getElementById('myOffer').textContent;
+            if (!code) {
+                alert('먼저 연결 코드를 생성해주세요.');
+                return;
+            }
+            const blob = new Blob([code], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'p2pchat_code.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log('연결 코드 파일이 다운로드되었습니다.', 'success');
+        }
+
+        function loadCodeFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                document.getElementById('remoteAnswer').value = content;
+                log('연결 코드 파일을 성공적으로 불러왔습니다.', 'success');
+            };
+            reader.onerror = function(e) {
+                log('파일 읽기 오류: ' + e, 'error');
+                alert('파일을 읽는 중 오류가 발생했습니다.');
+            };
+            reader.readAsText(file);
         }
 
         function displayMessage(sender, message, isOwn) {
