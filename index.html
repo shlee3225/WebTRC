@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -63,6 +63,10 @@
 
         .status-dot.connected {
             background: #2ed573;
+        }
+
+        .status-dot.connecting {
+            background: #ffa502;
         }
 
         @keyframes pulse {
@@ -139,6 +143,11 @@
         .btn-secondary:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9500 0%, #ff6b35 100%);
+            color: white;
         }
 
         .connection-codes {
@@ -256,14 +265,14 @@
             box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
         }
 
-        .privacy-info {
+        .compatibility-info {
             background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
         }
 
-        .privacy-info h3 {
+        .compatibility-info h3 {
             color: #2d5016;
             margin-bottom: 10px;
             display: flex;
@@ -271,9 +280,29 @@
             gap: 10px;
         }
 
-        .privacy-info p {
+        .compatibility-info p {
             color: #2d5016;
             line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .network-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .network-info h3 {
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+
+        .network-info p {
+            color: #2d3436;
+            line-height: 1.6;
+            font-size: 14px;
         }
 
         .copy-btn {
@@ -299,7 +328,7 @@
             margin: 20px 0;
             font-family: 'Courier New', monospace;
             font-size: 12px;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
@@ -310,16 +339,86 @@
         }
 
         .log-entry {
-            margin: 5px 0;
+            margin: 3px 0;
+            padding: 2px 0;
+        }
+
+        .log-entry.error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .log-entry.success {
+            color: #28a745;
+        }
+
+        .log-entry.warning {
+            color: #fd7e14;
+        }
+
+        .log-entry.info {
+            color: #6c757d;
+        }
+
+        .browser-status {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .browser-status h4 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-ok {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-warning {
+            background: #fff3cd;
             color: #856404;
         }
 
-        .error {
-            color: #dc3545;
+        .retry-section {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8d7da;
+            border-radius: 10px;
         }
 
-        .success {
-            color: #28a745;
+        .retry-section h4 {
+            color: #721c24;
+            margin-bottom: 15px;
         }
 
         @media (max-width: 600px) {
@@ -345,17 +444,28 @@
             <p>개인정보 노출 없는 안전한 1:1 채팅</p>
             <div class="connection-status">
                 <div class="status-dot" id="statusDot"></div>
-                <span id="connectionStatus">연결 대기중</span>
+                <span id="connectionStatus">시스템 확인 중...</span>
             </div>
         </div>
 
         <div class="main-content">
-            <div class="privacy-info">
-                <h3>🛡️ 개인정보 보호 안내</h3>
-                <p>• 모든 메시지는 P2P 방식으로 직접 전송되어 서버에 저장되지 않습니다<br>
-                • 익명 닉네임을 사용하여 실제 신원이 노출되지 않습니다<br>
-                • 브라우저를 닫으면 모든 대화 내용이 완전히 삭제됩니다<br>
-                • WebRTC 암호화로 안전한 통신을 보장합니다</p>
+            <div class="browser-status" id="browserStatus">
+                <h4>🔍 브라우저 호환성 검사</h4>
+                <div id="statusList"></div>
+            </div>
+
+            <div class="compatibility-info">
+                <h3>💡 연결 요구사항 및 호환성</h3>
+                <p>• <strong>브라우저 호환성:</strong> Chrome, Firefox, Safari, Edge 최신 버전<br>
+                • <strong>네트워크:</strong> 서로 다른 네트워크(WiFi/모바일 데이터) 권장<br>
+                • <strong>방화벽:</strong> 기업/학교 네트워크에서는 연결이 제한될 수 있음<br>
+                • <strong>디바이스:</strong> 같은 기기, 다른 기기 모두 사용 가능<br>
+                • <strong>HTTPS:</strong> 일부 기능은 HTTPS 환경에서만 작동</p>
+            </div>
+
+            <div class="network-info" id="networkInfo">
+                <h3>⚠️ 연결 문제 해결 방법</h3>
+                <p id="networkSolution"></p>
             </div>
 
             <div class="debug-info" id="debugInfo">
@@ -382,6 +492,13 @@
                         <button class="btn btn-secondary" id="connectBtn" onclick="connectToRemote()" style="margin-top: 10px;">연결하기</button>
                     </div>
                 </div>
+
+                <div class="retry-section" id="retrySection">
+                    <h4>🔄 연결 실패</h4>
+                    <p>연결에 실패했습니다. 다른 방법을 시도해보세요.</p>
+                    <button class="btn btn-warning" onclick="retryConnection()" style="margin: 10px;">재시도</button>
+                    <button class="btn btn-secondary" onclick="resetConnection()" style="margin: 10px;">처음부터 다시</button>
+                </div>
             </div>
 
             <div class="chat-section" id="chatSection">
@@ -399,28 +516,135 @@
         let dataChannel = null;
         let nickname = '';
         let isInitiator = false;
+        let connectionAttempts = 0;
+        let maxRetries = 3;
+        let browserCompatibility = {};
 
-        // WebRTC 설정 - 더 많은 STUN 서버 추가
-        const configuration = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun2.l.google.com:19302' },
-                { urls: 'stun:stun3.l.google.com:19302' },
-                { urls: 'stun:stun4.l.google.com:19302' }
-            ],
-            iceCandidatePoolSize: 10
-        };
+        // 다양한 STUN/TURN 서버 설정 (여러 환경 지원)
+        const configurations = [
+            {
+                // 기본 구성 - Google STUN 서버
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' },
+                    { urls: 'stun:stun2.l.google.com:19302' }
+                ],
+                iceCandidatePoolSize: 10,
+                bundlePolicy: 'max-bundle',
+                rtcpMuxPolicy: 'require'
+            },
+            {
+                // 대안 구성 - 다른 STUN 서버들
+                iceServers: [
+                    { urls: 'stun:stun.stunprotocol.org:3478' },
+                    { urls: 'stun:stun.services.mozilla.com' },
+                    { urls: 'stun:stun.l.google.com:19302' }
+                ],
+                iceCandidatePoolSize: 5,
+                bundlePolicy: 'balanced'
+            }
+        ];
+
+        // 브라우저 호환성 검사
+        function checkBrowserCompatibility() {
+            const userAgent = navigator.userAgent;
+            const status = {};
+            
+            // WebRTC 지원 확인
+            status.webrtc = {
+                name: 'WebRTC 지원',
+                supported: !!(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+                required: true
+            };
+
+            // DataChannel 지원 확인
+            status.datachannel = {
+                name: 'DataChannel 지원',
+                supported: status.webrtc.supported,
+                required: true
+            };
+
+            // HTTPS 확인
+            status.https = {
+                name: 'HTTPS 연결',
+                supported: location.protocol === 'https:' || location.hostname === 'localhost',
+                required: false
+            };
+
+            // 브라우저 타입 확인
+            let browserName = 'Unknown';
+            let browserSupported = false;
+
+            if (userAgent.includes('Chrome')) {
+                browserName = 'Chrome';
+                browserSupported = true;
+            } else if (userAgent.includes('Firefox')) {
+                browserName = 'Firefox';
+                browserSupported = true;
+            } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+                browserName = 'Safari';
+                browserSupported = true;
+            } else if (userAgent.includes('Edge')) {
+                browserName = 'Edge';
+                browserSupported = true;
+            }
+
+            status.browser = {
+                name: `브라우저 (${browserName})`,
+                supported: browserSupported,
+                required: true
+            };
+
+            // getUserMedia (향후 음성/비디오 지원용)
+            status.usermedia = {
+                name: 'MediaDevices API',
+                supported: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
+                required: false
+            };
+
+            browserCompatibility = status;
+            displayBrowserStatus(status);
+            
+            return Object.values(status).filter(s => s.required).every(s => s.supported);
+        }
+
+        function displayBrowserStatus(status) {
+            const statusList = document.getElementById('statusList');
+            statusList.innerHTML = '';
+
+            Object.values(status).forEach(item => {
+                const statusItem = document.createElement('div');
+                statusItem.className = 'status-item';
+                
+                const name = document.createElement('span');
+                name.textContent = item.name;
+                
+                const badge = document.createElement('span');
+                badge.className = `status-badge ${item.supported ? 'status-ok' : (item.required ? 'status-error' : 'status-warning')}`;
+                badge.textContent = item.supported ? '지원됨' : (item.required ? '미지원' : '선택사항');
+                
+                statusItem.appendChild(name);
+                statusItem.appendChild(badge);
+                statusList.appendChild(statusItem);
+            });
+        }
 
         function log(message, type = 'info') {
             const debugLog = document.getElementById('debugLog');
             const timestamp = new Date().toLocaleTimeString();
             const logEntry = document.createElement('div');
             logEntry.className = `log-entry ${type}`;
-            logEntry.textContent = `[${timestamp}] ${message}`;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
             debugLog.appendChild(logEntry);
             debugLog.scrollTop = debugLog.scrollHeight;
             console.log(`[${timestamp}] ${message}`);
+
+            // 5초 후 자동으로 오래된 로그 정리 (성능 최적화)
+            setTimeout(() => {
+                if (debugLog.children.length > 100) {
+                    debugLog.removeChild(debugLog.firstChild);
+                }
+            }, 100);
         }
 
         async function startConnection() {
@@ -432,58 +656,59 @@
                 return;
             }
 
+            // 브라우저 호환성 재확인
+            if (!checkBrowserCompatibility()) {
+                showNetworkInfo('브라우저 호환성 문제가 감지되었습니다. 지원되는 브라우저의 최신 버전을 사용해주세요.');
+                return;
+            }
+
             nickname = nicknameInput.value.trim();
             isInitiator = true;
             startBtn.disabled = true;
+            connectionAttempts++;
             
-            log('연결 시작...', 'info');
+            log(`연결 시도 시작 (${connectionAttempts}/${maxRetries})...`, 'info');
+            updateConnectionStatus('연결 시도 중...', false, true);
             
             try {
+                // 설정 선택 (시도 횟수에 따라 다른 설정 사용)
+                const configIndex = Math.min(connectionAttempts - 1, configurations.length - 1);
+                const config = configurations[configIndex];
+                
+                log(`구성 ${configIndex + 1} 사용중...`, 'info');
+                
                 // RTCPeerConnection 생성
-                localConnection = new RTCPeerConnection(configuration);
+                localConnection = new RTCPeerConnection(config);
                 log('RTCPeerConnection 생성됨', 'success');
                 
-                // 연결 상태 모니터링
-                localConnection.onconnectionstatechange = () => {
-                    log(`연결 상태: ${localConnection.connectionState}`, 'info');
-                    if (localConnection.connectionState === 'failed') {
-                        log('연결 실패 - 재시도가 필요할 수 있습니다', 'error');
-                    }
-                };
-
-                localConnection.oniceconnectionstatechange = () => {
-                    log(`ICE 연결 상태: ${localConnection.iceConnectionState}`, 'info');
-                };
-
-                localConnection.onicegatheringstatechange = () => {
-                    log(`ICE 수집 상태: ${localConnection.iceGatheringState}`, 'info');
-                };
+                // 연결 상태 모니터링 강화
+                setupConnectionMonitoring(localConnection);
                 
                 // 데이터 채널 생성
                 dataChannel = localConnection.createDataChannel('chat', {
                     ordered: true,
-                    maxRetransmits: 3
+                    maxRetransmits: 3,
+                    maxPacketLifeTime: 3000
                 });
                 
                 log('데이터 채널 생성됨', 'success');
                 setupDataChannel(dataChannel);
                 
-                // ICE 후보 처리
+                // ICE 후보 처리 개선
                 localConnection.onicecandidate = (event) => {
                     if (event.candidate) {
-                        log(`ICE 후보 생성: ${event.candidate.type}`, 'info');
+                        log(`ICE 후보: ${event.candidate.type} (${event.candidate.protocol})`, 'info');
                     } else {
                         log('ICE 후보 수집 완료', 'success');
-                        // ICE 수집이 완료된 후 offer 표시
                         const offerText = btoa(JSON.stringify(localConnection.localDescription));
                         document.getElementById('myOffer').textContent = offerText;
-                        log('연결 코드 생성 완료', 'success');
+                        updateConnectionStatus('연결 코드 생성됨', false);
                     }
                 };
 
                 // 원격 데이터 채널 처리
                 localConnection.ondatachannel = (event) => {
-                    log('원격 데이터 채널 수신됨', 'info');
+                    log('원격 데이터 채널 수신됨', 'success');
                     const channel = event.channel;
                     setupDataChannel(channel);
                 };
@@ -499,13 +724,80 @@
                 log('Local description 설정 완료', 'success');
 
                 document.getElementById('connectionCodes').style.display = 'block';
-                updateConnectionStatus('연결 코드 생성 중...', false);
+                updateConnectionStatus('ICE 후보 수집 중...', false, true);
+                
+                // 연결 타임아웃 설정
+                setTimeout(() => {
+                    if (localConnection && localConnection.iceConnectionState === 'checking') {
+                        log('연결 타임아웃 - ICE 연결 시간 초과', 'warning');
+                        showNetworkInfo('연결 시간이 초과되었습니다. 네트워크 환경을 확인하고 다시 시도해주세요.');
+                    }
+                }, 30000);
                 
             } catch (error) {
                 log(`연결 시작 실패: ${error.message}`, 'error');
                 console.error('연결 시작 실패:', error);
-                alert('연결 시작에 실패했습니다. 브라우저를 새로고침 후 다시 시도해주세요.');
+                
+                if (connectionAttempts < maxRetries) {
+                    showRetrySection('연결 시작에 실패했습니다. 다른 설정으로 재시도하시겠습니까?');
+                } else {
+                    showNetworkInfo('모든 연결 시도가 실패했습니다. 네트워크 환경이나 방화벽 설정을 확인해주세요.');
+                }
                 startBtn.disabled = false;
+            }
+        }
+
+        function setupConnectionMonitoring(connection) {
+            connection.onconnectionstatechange = () => {
+                const state = connection.connectionState;
+                log(`연결 상태: ${state}`, state === 'connected' ? 'success' : (state === 'failed' ? 'error' : 'info'));
+                
+                if (state === 'failed') {
+                    log('연결 실패 감지됨', 'error');
+                    handleConnectionFailure();
+                } else if (state === 'connected') {
+                    hideNetworkInfo();
+                    hideRetrySection();
+                }
+            };
+
+            connection.oniceconnectionstatechange = () => {
+                const state = connection.iceConnectionState;
+                log(`ICE 연결 상태: ${state}`, state === 'connected' ? 'success' : (state === 'failed' ? 'error' : 'info'));
+                
+                switch (state) {
+                    case 'checking':
+                        updateConnectionStatus('연결 확인 중...', false, true);
+                        break;
+                    case 'connected':
+                        updateConnectionStatus('ICE 연결됨', false, true);
+                        break;
+                    case 'disconnected':
+                        log('ICE 연결 끊김 - 재연결 시도 중...', 'warning');
+                        updateConnectionStatus('재연결 시도 중...', false, true);
+                        break;
+                    case 'failed':
+                        log('ICE 연결 실패', 'error');
+                        handleConnectionFailure();
+                        break;
+                }
+            };
+
+            connection.onicegatheringstatechange = () => {
+                log(`ICE 수집 상태: ${connection.iceGatheringState}`, 'info');
+                if (connection.iceGatheringState === 'complete') {
+                    log('ICE 수집 완료', 'success');
+                }
+            };
+        }
+
+        function handleConnectionFailure() {
+            if (connectionAttempts < maxRetries) {
+                showRetrySection('연결에 실패했습니다. 다시 시도하시겠습니까?');
+                showNetworkInfo('네트워크 연결 문제가 감지되었습니다. WiFi와 모바일 데이터를 번갈아 시도하거나, 다른 네트워크에서 접속해보세요.');
+            } else {
+                showNetworkInfo('여러 번의 연결 시도가 실패했습니다. 방화벽이나 기업/학교 네트워크 제한이 있을 수 있습니다.');
+                updateConnectionStatus('연결 실패', false);
             }
         }
 
@@ -529,262 +821,17 @@
                     // Answer 생성 (수신자)
                     if (!localConnection) {
                         log('새 RTCPeerConnection 생성 (수신자)', 'info');
-                        localConnection = new RTCPeerConnection(configuration);
+                        
+                        // 브라우저 호환성 재확인
+                        if (!checkBrowserCompatibility()) {
+                            throw new Error('브라우저 호환성 문제');
+                        }
+                        
+                        const config = configurations[0]; // 첫 번째 구성 사용
+                        localConnection = new RTCPeerConnection(config);
                         isInitiator = false;
                         
-                        // 연결 상태 모니터링
-                        localConnection.onconnectionstatechange = () => {
-                            log(`연결 상태: ${localConnection.connectionState}`, 'info');
-                        };
-
-                        localConnection.oniceconnectionstatechange = () => {
-                            log(`ICE 연결 상태: ${localConnection.iceConnectionState}`, 'info');
-                        };
+                        setupConnectionMonitoring(localConnection);
                         
                         localConnection.ondatachannel = (event) => {
-                            log('데이터 채널 수신됨', 'success');
-                            dataChannel = event.channel;
-                            setupDataChannel(dataChannel);
-                        };
-                        
-                        localConnection.onicecandidate = (event) => {
-                            if (event.candidate) {
-                                log(`ICE 후보 생성: ${event.candidate.type}`, 'info');
-                            } else {
-                                log('ICE 후보 수집 완료 (Answer)', 'success');
-                                const answerText = btoa(JSON.stringify(localConnection.localDescription));
-                                document.getElementById('myOffer').textContent = answerText;
-                                log('Answer 코드 생성 완료', 'success');
-                            }
-                        };
-
-                        // 닉네임 설정
-                        const nicknameInput = document.getElementById('nicknameInput');
-                        if (!nickname && nicknameInput.value.trim()) {
-                            nickname = nicknameInput.value.trim();
-                        } else if (!nickname) {
-                            nickname = '익명사용자';
-                        }
-                    }
-                    
-                    log('Remote description 설정 중...', 'info');
-                    await localConnection.setRemoteDescription(remoteDescription);
-                    
-                    log('Answer 생성 중...', 'info');
-                    const answer = await localConnection.createAnswer();
-                    await localConnection.setLocalDescription(answer);
-                    
-                    updateConnectionStatus('Answer 생성됨 - 코드를 상대방에게 전달하세요', false);
-                    document.getElementById('connectionCodes').style.display = 'block';
-                    
-                } else if (remoteDescription.type === 'answer') {
-                    // Answer 수신 (발신자)
-                    if (!localConnection) {
-                        throw new Error('연결이 초기화되지 않았습니다. 먼저 "연결 시작"을 클릭해주세요.');
-                    }
-                    
-                    log('Answer 처리 중...', 'info');
-                    await localConnection.setRemoteDescription(remoteDescription);
-                    updateConnectionStatus('연결 시도 중...', false);
-                    log('Answer 처리 완료', 'success');
-                }
-                
-            } catch (error) {
-                log(`연결 실패: ${error.message}`, 'error');
-                console.error('연결 실패:', error);
-                
-                if (error.name === 'InvalidStateError') {
-                    alert('연결 상태 오류입니다. 페이지를 새로고침 후 다시 시도해주세요.');
-                } else {
-                    alert('잘못된 연결 코드이거나 연결에 실패했습니다. 코드를 다시 확인해주세요.');
-                }
-                connectBtn.disabled = false;
-            }
-        }
-
-        function setupDataChannel(channel) {
-            channel.onopen = () => {
-                log('데이터 채널 열림 - 연결 성공!', 'success');
-                updateConnectionStatus('연결됨', true);
-                document.getElementById('setupSection').style.display = 'none';
-                document.getElementById('chatSection').style.display = 'block';
-                document.getElementById('debugInfo').style.display = 'none';
-                document.getElementById('messageInput').focus();
-            };
-
-            channel.onclose = () => {
-                log('데이터 채널 닫힘', 'info');
-                updateConnectionStatus('연결 종료됨', false);
-            };
-
-            channel.onmessage = (event) => {
-                try {
-                    const message = JSON.parse(event.data);
-                    log(`메시지 수신: ${message.nickname}`, 'info');
-                    displayMessage(message.nickname, message.text, false);
-                } catch (error) {
-                    log(`메시지 파싱 오류: ${error.message}`, 'error');
-                }
-            };
-
-            channel.onerror = (error) => {
-                log(`데이터 채널 오류: ${error}`, 'error');
-                console.error('데이터 채널 오류:', error);
-            };
-
-            // 연결 테스트 메시지 전송 (연결 확인용)
-            if (channel.readyState === 'open') {
-                setTimeout(() => {
-                    try {
-                        const testMessage = {
-                            nickname: 'System',
-                            text: '연결 테스트',
-                            timestamp: new Date().toISOString(),
-                            type: 'test'
-                        };
-                        channel.send(JSON.stringify(testMessage));
-                        log('연결 테스트 메시지 전송됨', 'info');
-                    } catch (error) {
-                        log(`테스트 메시지 전송 실패: ${error.message}`, 'error');
-                    }
-                }, 1000);
-            }
-
-            dataChannel = channel;
-        }
-
-        function updateConnectionStatus(status, connected) {
-            document.getElementById('connectionStatus').textContent = status;
-            const statusDot = document.getElementById('statusDot');
-            if (connected) {
-                statusDot.classList.add('connected');
-            } else {
-                statusDot.classList.remove('connected');
-            }
-        }
-
-        function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const text = messageInput.value.trim();
-            
-            if (!text || !dataChannel || dataChannel.readyState !== 'open') {
-                if (!dataChannel) {
-                    log('데이터 채널이 없습니다', 'error');
-                } else if (dataChannel.readyState !== 'open') {
-                    log(`데이터 채널 상태: ${dataChannel.readyState}`, 'error');
-                }
-                return;
-            }
-
-            try {
-                const message = {
-                    nickname: nickname,
-                    text: text,
-                    timestamp: new Date().toISOString(),
-                    type: 'message'
-                };
-
-                dataChannel.send(JSON.stringify(message));
-                log(`메시지 전송: ${text.substring(0, 20)}...`, 'info');
-                displayMessage(nickname, text, true);
-                messageInput.value = '';
-            } catch (error) {
-                log(`메시지 전송 실패: ${error.message}`, 'error');
-                alert('메시지 전송에 실패했습니다.');
-            }
-        }
-
-        function displayMessage(senderNickname, text, isOwn) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message' + (isOwn ? ' own' : '');
-
-            const senderDiv = document.createElement('div');
-            senderDiv.className = 'message-sender';
-            senderDiv.textContent = senderNickname;
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-            contentDiv.textContent = text;
-
-            if (!isOwn) {
-                messageDiv.appendChild(senderDiv);
-            }
-            messageDiv.appendChild(contentDiv);
-
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            const text = element.textContent;
-            
-            if (!text.trim()) {
-                alert('복사할 내용이 없습니다.');
-                return;
-            }
-            
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('클립보드에 복사되었습니다!');
-                }).catch(() => {
-                    fallbackCopy(text);
-                });
-            } else {
-                fallbackCopy(text);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                alert('클립보드에 복사되었습니다!');
-            } catch (err) {
-                alert('복사에 실패했습니다. 수동으로 복사해주세요.');
-            }
-            document.body.removeChild(textArea);
-        }
-
-        // Enter 키로 메시지 전송
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        // Enter 키로 닉네임 설정
-        document.getElementById('nicknameInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                startConnection();
-            }
-        });
-
-        // 페이지 종료 시 연결 정리
-        window.addEventListener('beforeunload', function() {
-            if (dataChannel && dataChannel.readyState === 'open') {
-                dataChannel.close();
-            }
-            if (localConnection) {
-                localConnection.close();
-            }
-        });
-
-        // 페이지 로드 시 브라우저 호환성 체크
-        window.addEventListener('load', function() {
-            if (!window.RTCPeerConnection) {
-                alert('이 브라우저는 WebRTC를 지원하지 않습니다. Chrome, Firefox, Safari, Edge 최신 버전을 사용해주세요.');
-                log('WebRTC 미지원 브라우저', 'error');
-            } else {
-                log('브라우저 호환성 확인됨', 'success');
-            }
-        });
-    </script>
-</body>
-</html>
+                            log('데이터 채널
