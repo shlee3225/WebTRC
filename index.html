@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -101,6 +101,9 @@
             outline: none;
             transition: all 0.3s ease;
             min-width: 200px;
+            /* Safari 터치 최적화 */
+            -webkit-appearance: none;
+            -webkit-border-radius: 25px;
         }
 
         .nickname-input input:focus {
@@ -118,6 +121,10 @@
             transition: all 0.3s ease;
             font-weight: 500;
             position: relative;
+            /* Safari 터치 최적화 */
+            -webkit-appearance: none;
+            -webkit-border-radius: 25px;
+            touch-action: manipulation;
         }
 
         .btn:disabled {
@@ -173,11 +180,13 @@
             border-radius: 10px;
             border: 1px solid #dee2e6;
             word-break: break-all;
-            font-family: 'Courier New', monospace;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
             font-size: 14px;
             color: #6c757d;
             max-height: 150px;
             overflow-y: auto;
+            /* Safari 스크롤 최적화 */
+            -webkit-overflow-scrolling: touch;
         }
 
         .code-input {
@@ -185,10 +194,12 @@
             padding: 12px;
             border: 1px solid #dee2e6;
             border-radius: 10px;
-            font-family: 'Courier New', monospace;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
             font-size: 14px;
             resize: vertical;
             min-height: 120px;
+            /* Safari 최적화 */
+            -webkit-appearance: none;
         }
 
         .chat-section {
@@ -203,6 +214,7 @@
             padding: 20px;
             margin-bottom: 20px;
             background: #f8f9fa;
+            -webkit-overflow-scrolling: touch;
         }
 
         .message {
@@ -258,6 +270,7 @@
             font-size: 16px;
             outline: none;
             transition: all 0.3s ease;
+            -webkit-appearance: none;
         }
 
         .message-input input:focus {
@@ -314,6 +327,8 @@
             cursor: pointer;
             font-size: 12px;
             margin-left: 10px;
+            -webkit-appearance: none;
+            touch-action: manipulation;
         }
 
         .copy-btn:hover {
@@ -326,16 +341,17 @@
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
-            font-family: 'Courier New', monospace;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
             font-size: 12px;
             max-height: 250px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .debug-info h4 {
             color: #856404;
             margin-bottom: 10px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .log-entry {
@@ -421,6 +437,35 @@
             margin-bottom: 15px;
         }
 
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4facfe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .safari-notice {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .safari-notice h4 {
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 600px) {
             .container {
                 margin: 10px;
@@ -449,6 +494,11 @@
         </div>
 
         <div class="main-content">
+            <div class="safari-notice" id="safariNotice">
+                <h4>📱 Safari 사용자 안내</h4>
+                <p>Safari에서 WebRTC 기능이 제한될 수 있습니다. 연결이 되지 않으면 Chrome 또는 Firefox 앱을 사용해주세요.</p>
+            </div>
+
             <div class="browser-status" id="browserStatus">
                 <h4>🔍 브라우저 호환성 검사</h4>
                 <div id="statusList"></div>
@@ -456,11 +506,11 @@
 
             <div class="compatibility-info">
                 <h3>💡 연결 요구사항 및 호환성</h3>
-                <p>• <strong>브라우저 호환성:</strong> Chrome, Firefox, Safari, Edge 최신 버전<br>
-                • <strong>네트워크:</strong> 서로 다른 네트워크(WiFi/모바일 데이터) 권장<br>
-                • <strong>방화벽:</strong> 기업/학교 네트워크에서는 연결이 제한될 수 있음<br>
-                • <strong>디바이스:</strong> 같은 기기, 다른 기기 모두 사용 가능<br>
-                • <strong>HTTPS:</strong> 일부 기능은 HTTPS 환경에서만 작동</p>
+                <p>• <strong>iOS Safari:</strong> iOS 11+ 필요, 일부 제한 있음<br>
+                • <strong>권장 브라우저:</strong> Chrome, Firefox 앱 사용 권장<br>
+                • <strong>네트워크:</strong> WiFi 또는 셀룰러 데이터 모두 가능<br>
+                • <strong>HTTPS:</strong> 안전한 연결을 위해 HTTPS 사용<br>
+                • <strong>방화벽:</strong> 기업/학교 네트워크에서는 제한될 수 있음</p>
             </div>
 
             <div class="network-info" id="networkInfo">
@@ -470,6 +520,7 @@
 
             <div class="debug-info" id="debugInfo">
                 <h4>🔧 연결 상태 로그</h4>
+                <div class="loading-spinner" id="loadingSpinner"></div>
                 <div id="debugLog"></div>
             </div>
 
@@ -519,63 +570,82 @@
         let connectionAttempts = 0;
         let maxRetries = 3;
         let browserCompatibility = {};
+        let isSafari = false;
+        let isIOS = false;
+        let iceGatheringComplete = false;
 
-        // 다양한 STUN/TURN 서버 설정 (여러 환경 지원)
-        const configurations = [
-            {
-                // 기본 구성 - Google STUN 서버
-                iceServers: [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                    { urls: 'stun:stun1.l.google.com:19302' },
-                    { urls: 'stun:stun2.l.google.com:19302' }
-                ],
-                iceCandidatePoolSize: 10,
-                bundlePolicy: 'max-bundle',
-                rtcpMuxPolicy: 'require'
-            },
-            {
-                // 대안 구성 - 다른 STUN 서버들
-                iceServers: [
-                    { urls: 'stun:stun.stunprotocol.org:3478' },
-                    { urls: 'stun:stun.services.mozilla.com' },
-                    { urls: 'stun:stun.l.google.com:19302' }
-                ],
-                iceCandidatePoolSize: 5,
-                bundlePolicy: 'balanced'
+        // Safari 감지 및 최적화된 설정
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+            isIOS = /iPad|iPhone|iPod/.test(userAgent);
+            
+            log(`브라우저 감지: Safari=${isSafari}, iOS=${isIOS}`, 'info');
+            
+            if (isSafari || isIOS) {
+                document.getElementById('safariNotice').style.display = 'block';
             }
-        ];
+        }
 
-        // 브라우저 호환성 검사
+        // Safari/iOS 최적화된 WebRTC 설정
+        const getSafariOptimizedConfig = () => {
+            if (isSafari || isIOS) {
+                return {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' }
+                    ],
+                    bundlePolicy: 'max-bundle',
+                    rtcpMuxPolicy: 'require',
+                    iceCandidatePoolSize: 0 // Safari에서 문제 발생 가능성 있어 0으로 설정
+                };
+            } else {
+                return {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' },
+                        { urls: 'stun:stun2.l.google.com:19302' }
+                    ],
+                    iceCandidatePoolSize: 10,
+                    bundlePolicy: 'max-bundle',
+                    rtcpMuxPolicy: 'require'
+                };
+            }
+        };
+
+        // 브라우저 호환성 검사 (Safari 특별 처리)
         function checkBrowserCompatibility() {
             const userAgent = navigator.userAgent;
             const status = {};
             
-            // WebRTC 지원 확인
+            // WebRTC 지원 확인 (Safari 특별 처리)
+            let webrtcSupported = false;
+            if (window.RTCPeerConnection) {
+                webrtcSupported = true;
+            } else if (window.webkitRTCPeerConnection) {
+                window.RTCPeerConnection = window.webkitRTCPeerConnection;
+                webrtcSupported = true;
+            }
+
             status.webrtc = {
                 name: 'WebRTC 지원',
-                supported: !!(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+                supported: webrtcSupported,
                 required: true
             };
 
-            // DataChannel 지원 확인
-            status.datachannel = {
-                name: 'DataChannel 지원',
-                supported: status.webrtc.supported,
-                required: true
-            };
-
-            // HTTPS 확인
+            // HTTPS 확인 (Safari는 HTTPS 필수)
+            const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
             status.https = {
                 name: 'HTTPS 연결',
-                supported: location.protocol === 'https:' || location.hostname === 'localhost',
-                required: false
+                supported: isSecure,
+                required: isSafari || isIOS
             };
 
             // 브라우저 타입 확인
             let browserName = 'Unknown';
             let browserSupported = false;
 
-            if (userAgent.includes('Chrome')) {
+            if (userAgent.includes('Chrome') && !userAgent.includes('Edge')) {
                 browserName = 'Chrome';
                 browserSupported = true;
             } else if (userAgent.includes('Firefox')) {
@@ -583,7 +653,7 @@
                 browserSupported = true;
             } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
                 browserName = 'Safari';
-                browserSupported = true;
+                browserSupported = isIOS ? true : true; // Safari도 지원하지만 제한적
             } else if (userAgent.includes('Edge')) {
                 browserName = 'Edge';
                 browserSupported = true;
@@ -595,17 +665,28 @@
                 required: true
             };
 
-            // getUserMedia (향후 음성/비디오 지원용)
-            status.usermedia = {
-                name: 'MediaDevices API',
-                supported: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-                required: false
-            };
+            // iOS 버전 확인
+            if (isIOS) {
+                const iosVersion = userAgent.match(/OS (\d+)_(\d+)/);
+                const majorVersion = iosVersion ? parseInt(iosVersion[1]) : 0;
+                
+                status.iosVersion = {
+                    name: `iOS 버전 (${majorVersion}+)`,
+                    supported: majorVersion >= 11,
+                    required: isIOS
+                };
+            }
 
             browserCompatibility = status;
             displayBrowserStatus(status);
             
-            return Object.values(status).filter(s => s.required).every(s => s.supported);
+            const requiredSupported = Object.values(status).filter(s => s.required).every(s => s.supported);
+            
+            if (!requiredSupported && (isSafari || isIOS)) {
+                showNetworkInfo('Safari/iOS에서 WebRTC 지원이 제한적입니다. Chrome 또는 Firefox 앱을 사용하시거나 HTTPS 환경에서 접속해주세요.');
+            }
+            
+            return requiredSupported;
         }
 
         function displayBrowserStatus(status) {
@@ -639,12 +720,17 @@
             debugLog.scrollTop = debugLog.scrollHeight;
             console.log(`[${timestamp}] ${message}`);
 
-            // 5초 후 자동으로 오래된 로그 정리 (성능 최적화)
+            // 성능 최적화: 로그 수 제한
             setTimeout(() => {
                 if (debugLog.children.length > 100) {
                     debugLog.removeChild(debugLog.firstChild);
                 }
             }, 100);
+        }
+
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = show ? 'block' : 'none';
         }
 
         async function startConnection() {
@@ -658,7 +744,7 @@
 
             // 브라우저 호환성 재확인
             if (!checkBrowserCompatibility()) {
-                showNetworkInfo('브라우저 호환성 문제가 감지되었습니다. 지원되는 브라우저의 최신 버전을 사용해주세요.');
+                showNetworkInfo('브라우저 호환성 문제가 감지되었습니다. 지원되는 브라우저를 사용하거나 HTTPS 환경에서 접속해주세요.');
                 return;
             }
 
@@ -666,43 +752,64 @@
             isInitiator = true;
             startBtn.disabled = true;
             connectionAttempts++;
+            iceGatheringComplete = false;
             
-            log(`연결 시도 시작 (${connectionAttempts}/${maxRetries})...`, 'info');
-            updateConnectionStatus('연결 시도 중...', false, true);
+            showLoading(true);
+            log(`연결 시도 시작 (${connectionAttempts}/${maxRetries}) - Safari/iOS 최적화 모드`, 'info');
+            updateConnectionStatus('연결 준비 중...', false, true);
             
             try {
-                // 설정 선택 (시도 횟수에 따라 다른 설정 사용)
-                const configIndex = Math.min(connectionAttempts - 1, configurations.length - 1);
-                const config = configurations[configIndex];
-                
-                log(`구성 ${configIndex + 1} 사용중...`, 'info');
+                // Safari 최적화된 설정 사용
+                const config = getSafariOptimizedConfig();
+                log(`WebRTC 구성: ${JSON.stringify(config, null, 2)}`, 'info');
                 
                 // RTCPeerConnection 생성
                 localConnection = new RTCPeerConnection(config);
                 log('RTCPeerConnection 생성됨', 'success');
                 
-                // 연결 상태 모니터링 강화
+                // 연결 상태 모니터링
                 setupConnectionMonitoring(localConnection);
                 
-                // 데이터 채널 생성
-                dataChannel = localConnection.createDataChannel('chat', {
-                    ordered: true,
-                    maxRetransmits: 3,
-                    maxPacketLifeTime: 3000
-                });
+                // 데이터 채널 생성 (Safari 최적화)
+                const dataChannelConfig = {
+                    ordered: true
+                };
                 
-                log('데이터 채널 생성됨', 'success');
+                // Safari에서는 일부 옵션이 문제가 될 수 있으므로 기본값 사용
+                if (!isSafari && !isIOS) {
+                    dataChannelConfig.maxRetransmits = 3;
+                    dataChannelConfig.maxPacketLifeTime = 3000;
+                }
+                
+                dataChannel = localConnection.createDataChannel('chat', dataChannelConfig);
+                log('데이터 채널 생성됨 (Safari 최적화)', 'success');
                 setupDataChannel(dataChannel);
                 
-                // ICE 후보 처리 개선
+                // ICE 후보 처리 (Safari 최적화)
+                let iceGatheringTimer = null;
+                
                 localConnection.onicecandidate = (event) => {
                     if (event.candidate) {
-                        log(`ICE 후보: ${event.candidate.type} (${event.candidate.protocol})`, 'info');
+                        log(`ICE 후보: ${event.candidate.type} (${event.candidate.protocol || 'unknown'})`, 'info');
+                        
+                        // Safari에서는 ICE 수집이 완료되지 않을 수 있으므로 타이머 설정
+                        if (iceGatheringTimer) {
+                            clearTimeout(iceGatheringTimer);
+                        }
+                        
+                        iceGatheringTimer = setTimeout(() => {
+                            if (!iceGatheringComplete && localConnection && localConnection.localDescription) {
+                                log('ICE 수집 타임아웃 - 현재까지 수집된 후보로 진행', 'warning');
+                                completeIceGathering();
+                            }
+                        }, isSafari || isIOS ? 8000 : 5000); // Safari는 더 긴 타임아웃
+                        
                     } else {
-                        log('ICE 후보 수집 완료', 'success');
-                        const offerText = btoa(JSON.stringify(localConnection.localDescription));
-                        document.getElementById('myOffer').textContent = offerText;
-                        updateConnectionStatus('연결 코드 생성됨', false);
+                        log('ICE 후보 수집 완료 (자연적 종료)', 'success');
+                        if (iceGatheringTimer) {
+                            clearTimeout(iceGatheringTimer);
+                        }
+                        completeIceGathering();
                     }
                 };
 
@@ -713,125 +820,17 @@
                     setupDataChannel(channel);
                 };
 
-                // Offer 생성
+                // Offer 생성 (Safari 최적화)
                 log('Offer 생성 중...', 'info');
-                const offer = await localConnection.createOffer({
+                updateConnectionStatus('Offer 생성 중...', false, true);
+                
+                const offerOptions = {
                     offerToReceiveAudio: false,
                     offerToReceiveVideo: false
-                });
+                };
+                
+                const offer = await localConnection.createOffer(offerOptions);
+                log('Offer 생성 완료', 'success');
                 
                 await localConnection.setLocalDescription(offer);
-                log('Local description 설정 완료', 'success');
-
-                document.getElementById('connectionCodes').style.display = 'block';
-                updateConnectionStatus('ICE 후보 수집 중...', false, true);
-                
-                // 연결 타임아웃 설정
-                setTimeout(() => {
-                    if (localConnection && localConnection.iceConnectionState === 'checking') {
-                        log('연결 타임아웃 - ICE 연결 시간 초과', 'warning');
-                        showNetworkInfo('연결 시간이 초과되었습니다. 네트워크 환경을 확인하고 다시 시도해주세요.');
-                    }
-                }, 30000);
-                
-            } catch (error) {
-                log(`연결 시작 실패: ${error.message}`, 'error');
-                console.error('연결 시작 실패:', error);
-                
-                if (connectionAttempts < maxRetries) {
-                    showRetrySection('연결 시작에 실패했습니다. 다른 설정으로 재시도하시겠습니까?');
-                } else {
-                    showNetworkInfo('모든 연결 시도가 실패했습니다. 네트워크 환경이나 방화벽 설정을 확인해주세요.');
-                }
-                startBtn.disabled = false;
-            }
-        }
-
-        function setupConnectionMonitoring(connection) {
-            connection.onconnectionstatechange = () => {
-                const state = connection.connectionState;
-                log(`연결 상태: ${state}`, state === 'connected' ? 'success' : (state === 'failed' ? 'error' : 'info'));
-                
-                if (state === 'failed') {
-                    log('연결 실패 감지됨', 'error');
-                    handleConnectionFailure();
-                } else if (state === 'connected') {
-                    hideNetworkInfo();
-                    hideRetrySection();
-                }
-            };
-
-            connection.oniceconnectionstatechange = () => {
-                const state = connection.iceConnectionState;
-                log(`ICE 연결 상태: ${state}`, state === 'connected' ? 'success' : (state === 'failed' ? 'error' : 'info'));
-                
-                switch (state) {
-                    case 'checking':
-                        updateConnectionStatus('연결 확인 중...', false, true);
-                        break;
-                    case 'connected':
-                        updateConnectionStatus('ICE 연결됨', false, true);
-                        break;
-                    case 'disconnected':
-                        log('ICE 연결 끊김 - 재연결 시도 중...', 'warning');
-                        updateConnectionStatus('재연결 시도 중...', false, true);
-                        break;
-                    case 'failed':
-                        log('ICE 연결 실패', 'error');
-                        handleConnectionFailure();
-                        break;
-                }
-            };
-
-            connection.onicegatheringstatechange = () => {
-                log(`ICE 수집 상태: ${connection.iceGatheringState}`, 'info');
-                if (connection.iceGatheringState === 'complete') {
-                    log('ICE 수집 완료', 'success');
-                }
-            };
-        }
-
-        function handleConnectionFailure() {
-            if (connectionAttempts < maxRetries) {
-                showRetrySection('연결에 실패했습니다. 다시 시도하시겠습니까?');
-                showNetworkInfo('네트워크 연결 문제가 감지되었습니다. WiFi와 모바일 데이터를 번갈아 시도하거나, 다른 네트워크에서 접속해보세요.');
-            } else {
-                showNetworkInfo('여러 번의 연결 시도가 실패했습니다. 방화벽이나 기업/학교 네트워크 제한이 있을 수 있습니다.');
-                updateConnectionStatus('연결 실패', false);
-            }
-        }
-
-        async function connectToRemote() {
-            const remoteCode = document.getElementById('remoteAnswer').value.trim();
-            const connectBtn = document.getElementById('connectBtn');
-            
-            if (!remoteCode) {
-                alert('상대방의 연결 코드를 입력해주세요.');
-                return;
-            }
-
-            connectBtn.disabled = true;
-            log('상대방 연결 코드 처리 중...', 'info');
-
-            try {
-                const remoteDescription = JSON.parse(atob(remoteCode));
-                log(`수신된 description 타입: ${remoteDescription.type}`, 'info');
-                
-                if (remoteDescription.type === 'offer') {
-                    // Answer 생성 (수신자)
-                    if (!localConnection) {
-                        log('새 RTCPeerConnection 생성 (수신자)', 'info');
-                        
-                        // 브라우저 호환성 재확인
-                        if (!checkBrowserCompatibility()) {
-                            throw new Error('브라우저 호환성 문제');
-                        }
-                        
-                        const config = configurations[0]; // 첫 번째 구성 사용
-                        localConnection = new RTCPeerConnection(config);
-                        isInitiator = false;
-                        
-                        setupConnectionMonitoring(localConnection);
-                        
-                        localConnection.ondatachannel = (event) => {
-                            log('데이터 채널
+                log('Local
